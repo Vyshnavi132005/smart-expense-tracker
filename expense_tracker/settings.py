@@ -1,12 +1,14 @@
 import os
 from pathlib import Path
 
+import dj_database_url
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-change-this-in-production")
 DEBUG = os.getenv("DEBUG", "False") == "True"
 
-ALLOWED_HOSTS = ["127.0.0.1", "localhost", ".railway.app"]
+ALLOWED_HOSTS = ["127.0.0.1", "localhost", ".onrender.com"]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -50,17 +52,11 @@ WSGI_APPLICATION = "expense_tracker.wsgi.application"
 ASGI_APPLICATION = "expense_tracker.asgi.application"
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.mysql",
-        "NAME": os.getenv("MYSQLDATABASE", "smart_expense_tracker"),
-        "USER": os.getenv("MYSQLUSER", "root"),
-        "PASSWORD": os.getenv("MYSQLPASSWORD", ""),
-        "HOST": os.getenv("MYSQLHOST", "127.0.0.1"),
-        "PORT": os.getenv("MYSQLPORT", "3306"),
-        "OPTIONS": {
-            "init_command": "SET sql_mode='STRICT_TRANS_TABLES'",
-        },
-    }
+    "default": dj_database_url.config(
+        default="sqlite:///" + str(BASE_DIR / "db.sqlite3"),
+        conn_max_age=600,
+        ssl_require=False,
+    )
 }
 
 AUTH_PASSWORD_VALIDATORS = [
