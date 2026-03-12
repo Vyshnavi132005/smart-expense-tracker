@@ -1,0 +1,84 @@
+{% extends 'base.html' %} 
+ 
+{% block content %} 
+<section class='hero-box p-4 p-lg-5 mb-4'> 
+<div class='row align-items-center g-4'> 
+<div class='col-lg-8'> 
+<p class='text-uppercase small mb-2'>Dashboard</p> 
+<h1 class='display-6 fw-bold'>Welcome, {{ request.user.username }}</h1> 
+<p class='mb-0'>Track your spending, organize transactions, and understand your monthly habits with charts.</p> 
+</div> 
+<div class='col-lg-4 text-lg-end'> 
+<a class='btn btn-light btn-lg' href='{% url 'download_csv' %}'>Download Expenses</a> 
+</div> 
+</div> 
+</section> 
+ 
+<section class='row g-4 mb-4'> 
+<div class='col-md-4'><div class='card brand-card p-4 h-100'><p class='text-muted mb-2'>Total Spending</p><h2 class='mb-0'>Rs. {{ total_spending }}</h2></div></div> 
+<div class='col-md-4'><div class='card brand-card p-4 h-100'><p class='text-muted mb-2'>Total Transactions</p><h2 class='mb-0'>{{ total_transactions }}</h2></div></div> 
+<div class='col-md-4'><div class='card brand-card p-4 h-100'><p class='text-muted mb-2'>Current User</p><h2 class='mb-0'>{{ request.user.username }}</h2></div></div> 
+</section> 
+ 
+<section class='row g-4'> 
+<div class='col-xl-4'> 
+<div class='card brand-card p-4 h-100'> 
+<h3 class='h4 mb-3'>Add Expense</h3> 
+<form method='post'> 
+{% csrf_token %} 
+<div class='mb-3'><label class='form-label'>Amount</label>{{ form.amount }}</div> 
+<div class='mb-3'><label class='form-label'>Category</label>{{ form.category }}</div> 
+<div class='mb-3'><label class='form-label'>Description</label>{{ form.description }}</div> 
+<div class='mb-3'><label class='form-label'>Date</label>{{ form.date }}</div> 
+<button type='submit' class='btn btn-brand w-100'>Add Expense</button> 
+</form> 
+</div> 
+</div> 
+ 
+<div class='col-xl-8'> 
+<div class='card brand-card p-4 mb-4'> 
+<div class='d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-3'> 
+<div><h3 class='h4 mb-1'>Expense Table</h3><p class='text-muted mb-0'>Only your own expenses are visible.</p></div> 
+<form method='get' class='d-flex gap-2'> 
+<select name='month' class='form-select'> 
+<option value=''>All Months</option> 
+{% for value, label in month_choices %} 
+<option value='{{ value }}'>{{ label }}</option> 
+{% endfor %} 
+</select> 
+<button type='submit' class='btn btn-outline-secondary'>Filter</button> 
+</form> 
+</div> 
+<div class='table-responsive'> 
+<table class='table table-hover align-middle'> 
+<thead class='table-light'><tr><th>Amount</th><th>Category</th><th>Description</th><th>Date</th><th>Actions</th></tr></thead> 
+<tbody> 
+{% for expense in expenses %} 
+<tr><td>Rs. {{ expense.amount }}</td><td>{{ expense.category }}</td><td>{{ expense.description }}</td><td>{{ expense.date }}</td><td><a class='btn btn-sm btn-outline-primary me-2' href='{% url 'edit_expense' expense.id %}'>Edit</a> <a class='btn btn-sm btn-outline-danger' href='{% url 'delete_expense' expense.id %}'>Delete</a></td></tr> 
+{% empty %} 
+<tr><td colspan='5' class='text-center py-4'>No expenses found.</td></tr> 
+{% endfor %} 
+</tbody> 
+</table> 
+</div> 
+</div> 
+<div class='row g-4'> 
+<div class='col-lg-6'><div class='card brand-card p-4 h-100'><h3 class='h5 mb-3'>Spending by Category</h3><canvas id='categoryChart'></canvas></div></div> 
+<div class='col-lg-6'><div class='card brand-card p-4 h-100'><h3 class='h5 mb-3'>Monthly Spending</h3><canvas id='monthlyChart'></canvas></div></div> 
+</div> 
+</div> 
+</section> 
+{% endblock %}
+ 
+{% block extra_js %} 
+<script src='https://cdn.jsdelivr.net/npm/chart.js'></script> 
+<script> 
+const categories = [{% for item in categories %}'{{ item }}'{% if not forloop.last %}, {% endif %}{% endfor %}]; 
+const totals = [{% for item in totals %}{{ item }}{% if not forloop.last %}, {% endif %}{% endfor %}]; 
+const months = [{% for item in months %}'{{ item }}'{% if not forloop.last %}, {% endif %}{% endfor %}]; 
+const monthTotals = [{% for item in month_totals %}{{ item }}{% if not forloop.last %}, {% endif %}{% endfor %}]; 
+document.querySelectorAll('input, select, textarea').forEach(function(element) { if (!element.classList.contains('btn')) { element.classList.add('form-control'); } }); 
+new Chart(document.getElementById('categoryChart'), { type: 'bar', data: { labels: categories, datasets: [{ label: 'Amount', data: totals, backgroundColor: ['#0f766e', '#14b8a6', '#f59e0b', '#0f172a'] }] }, options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } } }); 
+new Chart(document.getElementById('monthlyChart'), { type: 'line', data: { labels: months, datasets: [{ label: 'Monthly Spending', data: monthTotals, borderColor: '#0f766e', backgroundColor: 'rgba(15, 118, 110, 0.15)', fill: true, tension: 0.35 }] }, options: { responsive: true, scales: { y: { beginAtZero: true } } } }); 
+</script> 
+{% endblock %}
