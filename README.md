@@ -16,23 +16,25 @@ SMART EXPENSE TRACKER is a beginner-friendly but professional Django web applica
 - About page with profile links
 - Admin panel support
 
-- ## 📸 Project Screenshots
+## 📸 Project Screenshots
 
 ### Login Page
-![Login Page](screenshots/login.png)
+![Login Page](Smart%20expense%20tracker_ScreenShots/Login-Page.png)
+
+### Registration Page
+![Registration Page](Smart%20expense%20tracker_ScreenShots/Registration-Page.png)
 
 ### Dashboard
-![Dashboard](screenshots/dashboard.png)
+![Dashboard](Smart%20expense%20tracker_ScreenShots/Dashboard-Home-Page.png)
 
 ### Expense Analytics
-![Charts](screenshots/charts.png)
+![Expense Analytics](Smart%20expense%20tracker_ScreenShots/Expense-Charts.png)
+
+### Edit Expense Feature
+![Edit Expense Feature](Smart%20expense%20tracker_ScreenShots/Edit-Expense-Feature.png)
 
 ### About Page
-![About](screenshots/about.png)
-
-### CSV Export
-![CSV Export](screenshots/csv-export.png)
-
+![About Page](Smart%20expense%20tracker_ScreenShots/About-Page.png)
 ## Tech Stack
 
 - Backend: Python, Django
