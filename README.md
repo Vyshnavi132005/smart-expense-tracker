@@ -208,7 +208,7 @@ B.Tech Final Year Student | Python & Django Developer | Aspiring Cloud Engineer
 
 ### Connect With Me
 
-- LinkedIn: www.linkedin.com/in/srikakulam-vyshnavi
+- LinkedIn: https://www.linkedin.com/in/vyshnavi-srikakulam
 - GitHub: https://github.com/Vyshnavi132005
 
 ---
